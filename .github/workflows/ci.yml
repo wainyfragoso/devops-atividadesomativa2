@@ -1,25 +1,30 @@
-name: CI Pipeline
-
+name: ci
 on:
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Baixar código
-        uses: actions/checkout@v3
+        - name: Checkout repository code
+          uses: actions/checkout@v4
 
-      - name: Configurar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+        - name: Python Lint Code Scanning Action
+          uses: advanced-security/python-lint-code-scanning-action@v1.1.1
+          with:
+            linter: pylint
 
-      - name: Instalar dependências
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-
-      - name: Rodar testes
-        run: pytest
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v5
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
